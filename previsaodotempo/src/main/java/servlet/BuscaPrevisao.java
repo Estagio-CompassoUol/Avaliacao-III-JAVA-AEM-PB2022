@@ -38,18 +38,18 @@ public String getRetornaCodCidade(String cidade) {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		Scanner sc = new Scanner(conn.getInputStream());
 		
-		String retorno = "";
+		String retornoxmlCid = "";
 		
 		while (sc.hasNextLine()) {
 			String leitura = sc.next();
 			if(leitura.contains("id")) {
-				retorno = getPrevisaoXML(leitura);
+				retornoxmlCid = getPrevisaoXML(leitura);
 					
 			}													 
 		}	
-		
+		System.out.println(retornoxmlCid);
 		sc.close();
-		return retorno;
+		return retornoxmlCid;
 		
 		
 	} catch (Exception e) {
