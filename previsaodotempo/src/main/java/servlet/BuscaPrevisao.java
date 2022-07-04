@@ -39,15 +39,15 @@ public String getRetornaCodCidade(String cidade) {
 		Scanner sc = new Scanner(conn.getInputStream());
 		
 		String retornoxmlCid = "";
-		
 		while (sc.hasNextLine()) {
-			String leitura = sc.next();
-			if(leitura.contains("id")) {
-				retornoxmlCid = getPrevisaoXML(leitura);
-					
-			}													 
+			
+		retornoxmlCid += sc.next()+",";
+		
+															 
 		}	
 		System.out.println(retornoxmlCid);
+		retornoxmlCid = getPrevisaoXML(retornoxmlCid);
+		
 		sc.close();
 		return retornoxmlCid;
 		
@@ -61,11 +61,12 @@ public String getRetornaCodCidade(String cidade) {
 
 	
 	public String getPrevisaoXML(String codLocalidade) throws Exception {
-//		String[] separVal = codLocalidade.split("Valor");
-//		String valorSep = separVal[1];			    
-		String[] dadoCodig = codLocalidade.split("<");			
-		String[] dadoCodig2 = dadoCodig[1].split(">");				
+		String[] separCodi = codLocalidade.split(",");
+		String codigo = separCodi[1];			    
+		String[] dadoCodig = codigo.split("<");			
+		String[] dadoCodig2 = dadoCodig[1].split(">");		
 		String codigoCid=dadoCodig2[0];
+		String codigoCid2=dadoCodig2[1];
 		
 		System.out.println(codigoCid);
 		String linkPrevisaoXML = "http://servicos.cptec.inpe.br/XML/cidade/"+codigoCid+"/previsao.xml";
