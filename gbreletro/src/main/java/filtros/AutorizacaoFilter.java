@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-@WebFilter("/do")
+//@WebFilter("/do")
 public class AutorizacaoFilter implements Filter {
 
 	

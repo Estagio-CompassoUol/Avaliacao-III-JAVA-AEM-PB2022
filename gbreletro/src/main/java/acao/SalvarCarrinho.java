@@ -20,49 +20,48 @@ import model.Produto;
 public class SalvarCarrinho implements Acao {
 
 	public String executa(HttpServletRequest request, HttpServletResponse response) {
-		List<Produto> produtos=new ArrayList<>(); 
+		List<Produto> produtos=new ArrayList<>();
+		List<Compra> compras = new ArrayList<>();
+		CarrinhoDAO carrinhoDAO = new CarrinhoDAO();
 		int idProd = 0;
 		double valorProd = 0;
 		System.out.println("Salvando no Carrinho de Compras");		
 
+				
 		String CEP=request.getParameter("cep");
 		String valorFreteSalv = request.getParameter("valor");
-		String prazoFre= request.getParameter("prazo");
-		String usuario=request.getParameter("usuario");
-				
+		String prazoFre= request.getParameter("prazo");				
 		
-		System.out.println(CEP+" " +valorFreteSalv +" " + prazoFre +" " + usuario);
-		
+		System.out.println(CEP+" " +valorFreteSalv +" " + prazoFre);		
+		List<Carrinho> listaCarrinhos = carrinhoDAO.getListaCarrinho();		
 		IrParaCarrinho irParaCarrinho=new IrParaCarrinho();		
-		List<Produto> produtos2=irParaCarrinho.getProdutos();		
+		List<Produto> produtos2=irParaCarrinho.getProdutosCarrinho(listaCarrinhos);
+		System.out.println( produtos2.size());
 		for (Produto produto : produtos2) {
-			idProd=produto.getIdProd();
-			valorProd=produto.getValor();
-			produtos.add(produto);
+			
+			Compra compra = new Compra();
+			compra.setIdProd(produto.getIdProd());
+			compra.setIdCliente(1);
+			compra.setValorProd(produto.getValor());
+			compra.setCepDes(CEP);
+			compra.setValorFrete(Double.parseDouble(valorFreteSalv.replace(',','.')));
+			compra.setPrazoEntrega(Integer.parseInt(prazoFre));
+						
+			compras.add(compra);
+			
+			CompraDAO compraDAO = new CompraDAO();
+			compraDAO.salvar(compra);
 		}
 		
 		for (Produto produto : produtos) {
 			System.out.println(produto.getNomeProd());
 		}
-			
-		Compra compra = new Compra();
-		compra.setIdProd(idProd);
-//		compra.setIdCliente(idUsuario);
-		compra.setValorProd(valorProd);
-		compra.setCepDes(CEP);
-
-		compra.setValorFrete(Double.parseDouble(valorFreteSalv.replace(',','.')));
-		compra.setPrazoEntrega(Integer.parseInt(prazoFre));
-				
-		CompraDAO compraDAO = new CompraDAO();
-		compraDAO.salvar(compra);
-		CarrinhoDAO carrinhoDAO = new CarrinhoDAO();
-		carrinhoDAO.ApagarCarrinhos();
 		
+		carrinhoDAO.ApagarCarrinhos();		
 		
-		request.setAttribute("compras", compra);
+		request.setAttribute("compras", compras);
 		
-		return "redirect:do?direct=compraCadastrada.jsp";
+		return "forward:compraCadastrada.jsp";
 	
 	}
 }

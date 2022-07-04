@@ -18,10 +18,8 @@ public class CompraDAO implements InterfaceCompraDAO {
                 psm.setDouble(3,compra.getValorFrete());
                 psm.setInt(4,compra.getPrazoEntrega());
                 psm.setInt(5,compra.getIdCliente());
-                psm.setString(6, compra.getCepDes());
-               
-                psm.execute();
-               
+                psm.setString(6, compra.getCepDes());             
+                            
             }catch (Exception e) {
 				System.out.println("Erro ao adicionar o produto no carrinho");
 			} 

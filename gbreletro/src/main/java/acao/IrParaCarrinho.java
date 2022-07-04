@@ -1,3 +1,5 @@
+
+
 package acao;
 
 import java.io.IOException;
@@ -15,7 +17,7 @@ import model.Carrinho;
 import model.Produto;
 
 public class IrParaCarrinho implements Acao {
-	List<Produto>produtos= new ArrayList<>();
+	private List<Produto> produtos=new ArrayList<>();
 	
 	public List<Produto> getProdutos() {
 		return produtos;
@@ -28,7 +30,7 @@ public class IrParaCarrinho implements Acao {
 		
 		CarrinhoDAO carrinhoDAO = new CarrinhoDAO();
 		List<Carrinho> listaCarrinhos = carrinhoDAO.getListaCarrinho();		
-		produtos.addAll(getProdutosCarrinho(listaCarrinhos));
+		this.produtos.addAll(getProdutosCarrinho(listaCarrinhos));
 	
 		request.setAttribute("produtos", produtos);
 		return "forward:carrinhoCompra.jsp";

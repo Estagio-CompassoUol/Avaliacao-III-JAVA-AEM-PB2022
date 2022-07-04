@@ -33,7 +33,7 @@
 					<input type="hidden" name="cep" value="${freteP.cep}" />
 					<input type="hidden" name="valor" value="${freteP.valorFrete}" />
 					<input type="hidden" name="prazo" value="${freteP.prazo}" />
-					<input type="hidden" name="usuario" value=" ${sessionScope.usuario.idEmail}" />					
+										
 					<input type="submit"/>	
     			</form> 
             </c:forEach>    

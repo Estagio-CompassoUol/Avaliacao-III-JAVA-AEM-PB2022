@@ -35,7 +35,7 @@ public class Login implements Acao {
 			System.out.println("Usuario existe");
 			HttpSession sessao = request.getSession();
 			sessao.setAttribute("usuario", retCliente);
-			return "redirect:Index.html";
+			return "redirect:do?direct=ListaProdutos";
 		} else {
 			return "redirect:do?direct=LoginForm";
 		}
