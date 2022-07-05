@@ -29,15 +29,18 @@ public class ControladorFilter implements Filter {
 		
 			String nomeDaClasse = "acao." + paramAcao;
 			System.out.println(paramAcao);
-			String nome;
+			String nome = null;
 			try {
 				Class classe = Class.forName(nomeDaClasse);//carrega a classe com o nome 
 				Acao acao = (Acao) classe.newInstance();
 				nome = acao.executa(request,response);
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-				throw new ServletException(e);
+				System.out.println("Classe não encontrada");
+				response.sendRedirect("Index.html");
 			}
 			String[] tipoEEndereco = nome.split(":");
+			System.out.println(tipoEEndereco[0]);
+			System.out.println(tipoEEndereco[1]);
 			if(tipoEEndereco[0].equals("forward")) {
 				RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/" + tipoEEndereco[1]);
 				rd.forward(request, response);

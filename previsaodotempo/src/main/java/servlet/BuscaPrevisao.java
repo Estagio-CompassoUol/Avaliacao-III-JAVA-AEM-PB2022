@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
 import javax.servlet.RequestDispatcher;
@@ -27,45 +28,60 @@ public class BuscaPrevisao extends HttpServlet{
 		String xmlCidade=req.getParameter("acao");
 		System.out.println(xmlCidade);
 
-		String codCidade = getRetornaCodCidade(xmlCidade);
+		String cidadeLowCase = xmlCidade.toLowerCase();
+		String[] divCidade = cidadeLowCase.split(" ");
+		String cidade="";
+		for (int i = 0; i < divCidade.length; i++) {
+			
+			System.out.println(cidade);
+			if(i==(divCidade.length-1)) {				
+				cidade += divCidade[i];
+			}else {
+				cidade += divCidade[i]+"%20";
+			}
+			System.out.println(cidade);
+		}		
+		System.out.println(cidade);
+		
+		String codCidade = getRetornaCodCidade(cidade);
 		System.out.println(codCidade);
+		 
 
 		String retorno;
 		try {
 			retorno = getPrevisaoXML(codCidade);
 			System.out.println(retorno);			
-			Gson gson = new Gson();
-			String json = gson.toJson(retorno); 			
+//			Gson gson = new Gson();
+//			String json = gson.toJson(retorno); 	
+			JSONObject paisesJson = XML.toJSONObject(retorno);
 			resp.setContentType("application/json");
-			resp.getWriter().print(retorno);			
+			resp.getWriter().print(paisesJson);			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			System.out.println("Não foi possivel obter o objeto JSON");;
 		}
 	}
 	
 @SuppressWarnings("resource")
 public String getRetornaCodCidade(String cidade) {
 	try {
+		System.out.println(cidade);
 		String linkInpeCod = "http://servicos.cptec.inpe.br/XML/listaCidades?city="+cidade;
 		URL url = new URL(linkInpeCod);    
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		Scanner sc = new Scanner(conn.getInputStream());
+		Scanner sc = new Scanner(conn.getInputStream(), "ISO-8859-1" );
 				
 		String retornoxmlCid = "";
 		while (sc.hasNextLine()) {			
-			retornoxmlCid = sc.next();
-			System.out.println(retornoxmlCid);
-			if(retornoxmlCid.contains("id")) {			
-				retornoxmlCid = sc.next();				
-				System.out.println(retornoxmlCid);
-				return retornoxmlCid;
-			}	
+			retornoxmlCid = sc.nextLine();
+			System.out.println(retornoxmlCid);		
+			return retornoxmlCid;
+				
 		}	
 		sc.close();
 		
 	} catch (Exception e) {
-		System.out.println("Cidade nÃƒÂ£o localizada");
+		System.out.println("Cidade não localizada");
 	}
 	return null;
 }
@@ -91,13 +107,13 @@ public String getRetornaCodCidade(String cidade) {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		Scanner sc = new Scanner(conn.getInputStream());
 	    String dados = "";
-//		
+		
 		while (sc.hasNextLine()) {					
 			dados+=sc.next();									 
 		}		
 		sc.close();
 		
-//		JSONObject paisesJson = XML.toJSONObject(dados);
+		
 		return dados;
 	}
 

@@ -46,7 +46,8 @@
     <br>
 	 
     <form action="/gbreletro/do?direct=CalculoFrete" method="post">	
-		CEP: <input type="text" name="cep"  />					
+		CEP: <input type="text" name="cep"  />
+		Tipo(JSON ou JSP):  <input type="text" name="tipo"  />					
 		<input type="submit"/>
 	</form>
 	

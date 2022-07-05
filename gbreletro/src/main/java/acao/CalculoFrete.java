@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.filters.ExpiresFilter.XServletOutputStream;
 
+import com.google.gson.Gson;
+
 import interfaces.Acao;
 import model.Frete;
 
@@ -30,6 +32,8 @@ public class CalculoFrete implements Acao{
 		
 		try {
 			String cepDest= request.getParameter("cep");
+			String tipo = request.getParameter("tipo");
+			
 			System.out.println(cepDest);
 			String frete = getFrete(cepDest);	
 			System.out.println(frete);
@@ -37,9 +41,15 @@ public class CalculoFrete implements Acao{
 			String valorString = freteDiv[0];			
 			String prazoString = freteDiv[1];
 			
-			listaFrete.add(new Frete(cepDest, valorString,prazoString)); 			
-									
-			request.setAttribute("frete", listaFrete);
+			listaFrete.add(new Frete(cepDest, valorString,prazoString));
+			
+			if (tipo.equalsIgnoreCase("JSON")) {
+				EnviaCepJSON enviaCepJSON = new EnviaCepJSON(listaFrete);
+				return "redirect:do?direct=EnviaCepJSON";
+			}
+				
+			request.setAttribute("frete", listaFrete);									
+			
 		} catch (Exception e) {
 			System.out.println("Erro ao calcular o frete");
 		}		
